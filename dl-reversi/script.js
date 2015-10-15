@@ -362,7 +362,7 @@ let GameField = React.createClass({
 
 let documentReadyPromise = new Promise(function(resolve, reject) {
   if(document.readyState == 'complete') resolve();
-  document.addEventLisener('DOMContentLoaded', function(){
+  document.addEventListener('DOMContentLoaded', function(){
     resolve();
   });
 });
