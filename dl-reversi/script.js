@@ -44,10 +44,10 @@ let Cell = React.createClass({
   render: function() {
     return (
       <div className={[(
-          this.props.color == CELLCOLOR.EMPTY ? 'empty' :
-          this.props.color == CELLCOLOR.WHITE ? 'white' :
-          'black'
-        ), 'field-cell'].join(' ')} onClick={this.handleCellClicked} ref="cont">
+        this.props.color == CELLCOLOR.EMPTY ? 'empty' :
+        this.props.color == CELLCOLOR.WHITE ? 'white' :
+        'black'
+      ), 'field-cell'].join(' ')} onClick={this.handleCellClicked} ref="cont">
       </div>
     );
   }

@@ -14,6 +14,7 @@ td {
   border-radius: 50%;
   height: 100%;
   width: 100%;
+  cursor: pointer;
 }
 .field-cell.white, .field-cell.black {
   box-shadow: 1px 1px 3px gray;
