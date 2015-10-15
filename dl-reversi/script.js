@@ -438,7 +438,7 @@ let GameContainer = React.createClass({
       self.setState({
         isMessageWindowHidden: true
       });
-    }
+    });
   },
   handleUpdateMLConfidenceLevel: function(MLConfidenceLevel) {
     this.setState({
