@@ -1,7 +1,6 @@
-@import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
-body {
-  font-family: 'Noto Sans Japanese', sans-serif;
-}
+/* @import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css); */
+@import url(http://necolas.github.io/normalize.css/latest/normalize.css);
+body {}
 h1 {
   color: #ccc;
   font-weight: normal;
