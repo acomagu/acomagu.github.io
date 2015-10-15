@@ -9,6 +9,10 @@
   ga('send', 'pageview');
 })();
 
+window.onerror = function(message, file, line, col, error) {
+  alert(arguments.join(','));
+};
+
 jQuery.noConflict();
 
 const APIKEY = 'yBRLWcVu3x21fniEh8IcS3hypeQ5BkT96rmFh3Wz';
@@ -349,6 +353,9 @@ let GameField = React.createClass({
       body: JSON.stringify(postBody)
     });
   },
+  reset: function() {
+    this.replaceState(this.getInitialState());
+  },
   render: function() {
     let rows = [];
     for(let i = 0; i < 8; ++i) {
@@ -431,7 +438,7 @@ let GameContainer = React.createClass({
       self.setState({
         isMessageWindowHidden: true
       });
-    }, 4000);
+    }
   },
   handleUpdateMLConfidenceLevel: function(MLConfidenceLevel) {
     this.setState({
