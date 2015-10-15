@@ -17,11 +17,16 @@ table {
 td {
   border: 1px solid #ddd;
 }
+td div {
+  height: 100%;
+  width: 100%;
+}
 .field-cell {
   border-radius: 50%;
   height: 100%;
   width: 100%;
   cursor: pointer;
+  transition: background-color 500ms ease-in-out;
 }
 .field-cell.white, .field-cell.black {
   box-shadow: 1px 1px 3px gray;

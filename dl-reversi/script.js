@@ -46,6 +46,8 @@ let clone = function(object) {
   return jQuery.extend(true, (Array.isArray(object) ? [] : {}), object);
 };
 
+let CSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 let Cell = React.createClass({
   handleCellClicked: function() {
     this.props.onCellClick(this.props.row, this.props.col);
@@ -56,7 +58,7 @@ let Cell = React.createClass({
         this.props.color == CELLCOLOR.EMPTY ? 'empty' :
         this.props.color == CELLCOLOR.WHITE ? 'white' :
         'black'
-      ), 'field-cell'].join(' ')} onClick={this.handleCellClicked} ref="cont">
+      ), 'field-cell'].join(' ')} onClick={this.handleCellClicked} keys={this.props.color}>
       </div>
     );
   }
@@ -409,8 +411,6 @@ let MLFace = React.createClass({
     );
   }
 });
-
-let CSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 let GameContainer = React.createClass({
   getInitialState: function() {
