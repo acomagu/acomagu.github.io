@@ -46,13 +46,13 @@ const FACE = [
 ];
 
 // (Consider about introducing Immutable-js
-let clone = function(object) {
+var clone = function(object) {
   return jQuery.extend(true, (Array.isArray(object) ? [] : {}), object);
 };
 
-let CSSTransitionGroup = React.addons.CSSTransitionGroup;
+var CSSTransitionGroup = React.addons.CSSTransitionGroup;
 
-let Cell = React.createClass({
+var Cell = React.createClass({
   handleCellClicked: function() {
     this.props.onCellClick(this.props.row, this.props.col);
   },
@@ -68,14 +68,14 @@ let Cell = React.createClass({
   }
 });
 
-let GameField = React.createClass({
+var GameField = React.createClass({
   computerChoicedAzureMLTypeFieldColors: [],
   humanChoicedAzureMLTypeFieldColors: [],
   getInitialFieldColors: function() {
-    let fieldColors = [];
-    for(let i = 0; i < 8; ++i) {
-      let cols = [];
-      for(let j = 0; j < 8; ++j) cols.push(0);
+    var fieldColors = [];
+    for(var i = 0; i < 8; ++i) {
+      var cols = [];
+      for(var j = 0; j < 8; ++j) cols.push(0);
       fieldColors.push(cols);
     }
     fieldColors[3][3] = fieldColors[4][4] = CELLCOLOR.WHITE;
@@ -90,17 +90,17 @@ let GameField = React.createClass({
     };
   },
   getChangedFieldColors: function(originalFieldColors, y, x, placedColor) {
-    let dx = [1, 1, 1, 0, 0, -1, -1, -1];
-    let dy = [1, 0, -1, 1, -1, 1, 0, -1];
-    let fieldColors = clone(originalFieldColors);
-    for(let i = 0; i < 8; ++i) {
+    var dx = [1, 1, 1, 0, 0, -1, -1, -1];
+    var dy = [1, 0, -1, 1, -1, 1, 0, -1];
+    var fieldColors = clone(originalFieldColors);
+    for(var i = 0; i < 8; ++i) {
       var toggleColors = (function(y, x) {
         if(y + dy[i] < 0 || y + dy[i] > 7 || x + dx[i] < 0 || x + dx[i] > 7 || fieldColors[y + dy[i]][x + dx[i]] == CELLCOLOR.EMPTY) {
           return false;
         } else if(fieldColors[y + dy[i]][x + dx[i]] == placedColor) {
           return true;
         } else {
-          let chain = toggleColors(y + dy[i], x + dx[i]);
+          var chain = toggleColors(y + dy[i], x + dx[i]);
           if(chain) fieldColors[y + dy[i]][x + dx[i]] = placedColor;
           return chain;
         }
@@ -112,10 +112,10 @@ let GameField = React.createClass({
   },
   isPlaceable: function(fieldColors, y, x, placedColor) {
     if(fieldColors[y][x] != CELLCOLOR.EMPTY) return false;
-    let dx = [1, 1, 1, 0, 0, -1, -1, -1];
-    let dy = [1, 0, -1, 1, -1, 1, 0, -1];
-    let ans = false;
-    for(let i = 0; i < 8; ++i) {
+    var dx = [1, 1, 1, 0, 0, -1, -1, -1];
+    var dy = [1, 0, -1, 1, -1, 1, 0, -1];
+    var ans = false;
+    for(var i = 0; i < 8; ++i) {
       var reg = (function(y, x, depth) {
         if(y + dy[i] < 0 || y + dy[i] > 7 || x + dx[i] < 0 || x + dx[i] > 7 || fieldColors[y + dy[i]][x + dx[i]] == CELLCOLOR.EMPTY) {
           return false;
@@ -132,21 +132,21 @@ let GameField = React.createClass({
     return ans;
   },
   getAzureMLTypeFieldColors: function(fieldColors) {
-    let flatArray = [];
-    for(let row of fieldColors) {
+    var flatArray = [];
+    fieldColors.forEach(function(row) {
       flatArray = flatArray.concat(
         row.map(function(num) {
           return num.toString()
         })
       );
-    }
+    });
     return flatArray;
   },
   fetchMLResults: function(fieldColorss) {
     // TODO: solve security problem (Is CORS Control unsafe?)
     const APIURL = 'https://a1x87i27wk.execute-api.us-west-2.amazonaws.com/bridgeForAzureMLStage/';
-    let self = this;
-    let postData = {
+    var self = this;
+    var postData = {
       Inputs: {
         input1: {
           ColumnNames: (function() {
@@ -161,7 +161,7 @@ let GameField = React.createClass({
       },
       GlobalParameters: {}
     };
-    let postBody = JSON.stringify({
+    var postBody = JSON.stringify({
       data: postData
     });
     console.log(postData);
@@ -191,8 +191,8 @@ let GameField = React.createClass({
     };
   },
   getPlaceablePositions: function(fieldColors, placedColor) {
-    let ans = [];
-    for(let y = 0; y < 8; ++y) for(let x = 0; x < 8; ++x) {
+    var ans = [];
+    for(var y = 0; y < 8; ++y) for(var x = 0; x < 8; ++x) {
       if(this.isPlaceable(fieldColors, y, x, placedColor)) {
         console.log(`placeable: ${y}, ${x}`);
         ans.push(this.getPosition(y, x));
@@ -201,21 +201,21 @@ let GameField = React.createClass({
     return ans;
   },
   place: function(y, x) {
-    let player = this.state.turn;
-    let placedColor = this.getPlacedColor(player);
-    let changedFieldColors = this.getChangedFieldColors(this.state.fieldColors, y, x, placedColor);
+    var player = this.state.turn;
+    var placedColor = this.getPlacedColor(player);
+    var changedFieldColors = this.getChangedFieldColors(this.state.fieldColors, y, x, placedColor);
     this.setState({
       fieldColors: changedFieldColors
     });
-    let self = this;
+    var self = this;
     // ( bad parts
     this.forceUpdate(function() {
-      let gameState = self.getGameState(self.state.fieldColors);
+      var gameState = self.getGameState(self.state.fieldColors);
       if(gameState == GAMESTATE.PROGRESS) {
         self.changeTurnTo((player == PLAYER.COMPUTER ? PLAYER.HUMAN : PLAYER.COMPUTER));
       } else {
         console.log('gameset', self.getWinner(self.state.fieldColors));
-        let winner = self.getWinner(self.state.fieldColors);
+        var winner = self.getWinner(self.state.fieldColors);
         self.props.onAlert(`${(
           winner == PLAYER.HUMAN ? 'You WIN!' :
           winner == PLAYER.COMPUTER ? 'I WIN!' :
@@ -234,7 +234,7 @@ let GameField = React.createClass({
   pass: function() {
     console.log('pass');
     this.props.onAlert('PASS!', this.state.turn);
-    let self = this;
+    var self = this;
     // ( BAD PART
     this.forceUpdate(function() {
       self.changeTurnTo((this.state.turn == PLAYER.COMPUTER ? PLAYER.HUMAN : PLAYER.COMPUTER));
@@ -251,13 +251,13 @@ let GameField = React.createClass({
       turn: turn
     });
     if(turn == PLAYER.HUMAN) {
-      this.handleTurnChangeToHuman();
+      this.handleturnChangeToHuman();
     } else {
-      this.handleTurnChangeToComputer();
+      this.handleturnChangeToComputer();
     }
   },
   getGameState: function(fieldColors) {
-    let sumOfPlaceablePositions = this.getPlaceablePositions(this.state.fieldColors, CELLCOLOR.BLACK).length + this.getPlaceablePositions(this.state.fieldColors, CELLCOLOR.WHITE).length;
+    var sumOfPlaceablePositions = this.getPlaceablePositions(this.state.fieldColors, CELLCOLOR.BLACK).length + this.getPlaceablePositions(this.state.fieldColors, CELLCOLOR.WHITE).length;
     if(sumOfPlaceablePositions == 0) {
       return GAMESTATE.END;
     } else {
@@ -265,7 +265,7 @@ let GameField = React.createClass({
     }
   },
   getWinner: function(fieldColors) {
-    let numbersOfBW = [CELLCOLOR.BLACK, CELLCOLOR.WHITE].map(function(color) {
+    var numbersOfBW = [CELLCOLOR.BLACK, CELLCOLOR.WHITE].map(function(color) {
       return fieldColors.map(function(value) {
         return value.filter(function(n) {
           return n == color;
@@ -287,7 +287,7 @@ let GameField = React.createClass({
   getPlayer: function(color) {
     return (color == CELLCOLOR.WHITE ? PLAYER.HUMAN : PLAYER.COMPUTER);
   },
-  handleTurnChangeToHuman: function() {
+  handleturnChangeToHuman: function() {
     this.computerChoicedAzureMLTypeFieldColors.push(this.getAzureMLTypeFieldColors(this.state.fieldColors));
     console.log(this.getPlaceablePositions(this.state.fieldColors, this.getPlacedColor(PLAYER.HUMAN)));
     if(this.getPlaceablePositions(this.state.fieldColors, this.getPlacedColor(PLAYER.HUMAN)).length == 0) this.pass();
@@ -304,27 +304,27 @@ let GameField = React.createClass({
       8
     );
   },
-  handleTurnChangeToComputer: function() {
-    console.log('handleTurnChangeToComputer');
+  handleturnChangeToComputer: function() {
+    console.log('handleturnChangeToComputer');
     this.props.onUpdateMLConfidenceLevel(0);
     this.humanChoicedAzureMLTypeFieldColors.push(this.getAzureMLTypeFieldColors(this.state.fieldColors));
-    let placedColor = this.getPlacedColor(PLAYER.COMPUTER);
-    let placeablePositions = this.getPlaceablePositions(this.state.fieldColors, placedColor);
+    var placedColor = this.getPlacedColor(PLAYER.COMPUTER);
+    var placeablePositions = this.getPlaceablePositions(this.state.fieldColors, placedColor);
     if(placeablePositions.length == 0) {
       this.pass();
       return;
     }
-    let self = this;
+    var self = this;
     this.fetchMLResults(placeablePositions.map(function(position) {
       return self.getChangedFieldColors(self.state.fieldColors, position.y, position.x, placedColor);
     })).then(function(results) {
       console.log(results);
-      let computerWinProbabilities = results.map(function(value) {
+      var computerWinProbabilities = results.map(function(value) {
         return Number(value.scoredProbability) * (value.scoredLabel == '1' ? 1 : -1);
       });
       // setting new field has max computerWinProbability
-      let maxComputerWinProbability = Math.max.apply(null, computerWinProbabilities);
-      let computerPlacePosition = placeablePositions[computerWinProbabilities.indexOf(maxComputerWinProbability)];
+      var maxComputerWinProbability = Math.max.apply(null, computerWinProbabilities);
+      var computerPlacePosition = placeablePositions[computerWinProbabilities.indexOf(maxComputerWinProbability)];
       console.log(maxComputerWinProbability);
       self.props.onUpdateMLConfidenceLevel(self.getConfidenceLevel(maxComputerWinProbability));
       self.place(computerPlacePosition.y, computerPlacePosition.x);
@@ -335,7 +335,7 @@ let GameField = React.createClass({
   sendTrainData: function(winner) {
     console.log('sendTrainData');
     const APIURL = 'https://a1x87i27wk.execute-api.us-west-2.amazonaws.com/bridgeForAzureMLStage/train-data';
-    let postBody = this.computerChoicedAzureMLTypeFieldColors.map(function(value) {
+    var postBody = this.computerChoicedAzureMLTypeFieldColors.map(function(value) {
       return value.concat([(winner == PLAYER.COMPUTER ? '1' : '0')]);
     }).concat(this.humanChoicedAzureMLTypeFieldColors.map(function(value) {
       return value.map(function(n) {
@@ -357,10 +357,10 @@ let GameField = React.createClass({
     this.replaceState(this.getInitialState());
   },
   render: function() {
-    let rows = [];
-    for(let i = 0; i < 8; ++i) {
-      let cols = [];
-      for(let j = 0; j < 8; ++j) {
+    var rows = [];
+    for(var i = 0; i < 8; ++i) {
+      var cols = [];
+      for(var j = 0; j < 8; ++j) {
         cols.push(
           <td>
             <Cell row={i} col={j} color={this.state.fieldColors[i][j]} onCellClick={this.handleCellClicked} />
@@ -378,16 +378,16 @@ let GameField = React.createClass({
   }
 });
 
-let documentReadyPromise = new Promise(function(resolve, reject) {
+var documentReadyPromise = new Promise(function(resolve, reject) {
   if(document.readyState == 'complete') resolve();
   document.addEventListener('DOMContentLoaded', function(){
     resolve();
   });
 });
 
-let MessageWindow = React.createClass({
+var MessageWindow = React.createClass({
   render: function() {
-    let messageLayerElement = (
+    var messageLayerElement = (
       <div className="message-layer" key={this.props.message}>
         <div className={['message-text-box'].concat((
           this.props.saidPlayer == PLAYER.HUMAN ? ['said-human']
@@ -398,7 +398,7 @@ let MessageWindow = React.createClass({
         </div>
       </div>
     );
-    let contentElement = (this.props.hidden ? null : messageLayerElement);
+    var contentElement = (this.props.hidden ? null : messageLayerElement);
     return (
       <div>
         <CSSTransitionGroup transitionName="message-layer-transition">
@@ -409,7 +409,7 @@ let MessageWindow = React.createClass({
   }
 });
 
-let MLFace = React.createClass({
+var MLFace = React.createClass({
   render: function() {
     return (
       <div className="mlface-box">
@@ -419,7 +419,7 @@ let MLFace = React.createClass({
   }
 });
 
-let GameContainer = React.createClass({
+var GameContainer = React.createClass({
   getInitialState: function() {
     return {
       isMessageWindowHidden: true,
@@ -433,7 +433,7 @@ let GameContainer = React.createClass({
       isMessageWindowHidden: false,
       MLConfidenceLevel: 0
     });
-    let self = this;
+    var self = this;
     setTimeout(function() {
       self.setState({
         isMessageWindowHidden: true
