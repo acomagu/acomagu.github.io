@@ -79,7 +79,7 @@ let GameField = React.createClass({
     let dy = [1, 0, -1, 1, -1, 1, 0, -1];
     let fieldColors = clone(originalFieldColors);
     for(let i = 0; i < 8; ++i) {
-      let toggleColors = (function(y, x) {
+      var toggleColors = (function(y, x) {
         if(y + dy[i] < 0 || y + dy[i] > 7 || x + dx[i] < 0 || x + dx[i] > 7 || fieldColors[y + dy[i]][x + dx[i]] == CELLCOLOR.EMPTY) {
           return false;
         } else if(fieldColors[y + dy[i]][x + dx[i]] == placedColor) {
@@ -101,7 +101,7 @@ let GameField = React.createClass({
     let dy = [1, 0, -1, 1, -1, 1, 0, -1];
     let ans = false;
     for(let i = 0; i < 8; ++i) {
-      let reg = (function(y, x, depth) {
+      var reg = (function(y, x, depth) {
         if(y + dy[i] < 0 || y + dy[i] > 7 || x + dx[i] < 0 || x + dx[i] > 7 || fieldColors[y + dy[i]][x + dx[i]] == CELLCOLOR.EMPTY) {
           return false;
         } else if(depth >= 1 && fieldColors[y + dy[i]][x + dx[i]] == placedColor) {
