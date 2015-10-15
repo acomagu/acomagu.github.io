@@ -374,7 +374,7 @@ let MessageWindow = React.createClass({
         <div className={['message-text-box'].concat((
           this.props.saidPlayer == PLAYER.HUMAN ? ['said-human']
           : ['said-computer']
-        ))}>
+        )).join(' ')}>
           <span className="message-face">{FACE[this.props.MLConfidenceLevel]}</span>
           <span className="message-text">{this.props.message}</span>
         </div>
