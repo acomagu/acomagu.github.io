@@ -1,4 +1,4 @@
-use strict';
+'use strict';
 
 (function() {
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -158,7 +158,6 @@ class GameField extends React.Component {
     let postBody = JSON.stringify({
       data: postData
     });
-    console.log(postData);
     return fetch(APIURL, {
       method: 'post',
       headers: {
@@ -190,7 +189,6 @@ class GameField extends React.Component {
     let ans = [];
     for(let y = 0; y < 8; ++y) for(let x = 0; x < 8; ++x) {
       if(this.isPlaceable(fieldColors, y, x, placedColor)) {
-        console.log(`placeable: ${y}, ${x}`);
         ans.push(this.getPosition(y, x));
       }
     }
@@ -210,7 +208,6 @@ class GameField extends React.Component {
       if(gameState == GAMESTATE.PROGRESS) {
         self.changeTurnTo((player == PLAYER.COMPUTER ? PLAYER.HUMAN : PLAYER.COMPUTER));
       } else {
-        console.log('gameset', self.getWinner(self.state.fieldColors));
         let winner = self.getWinner(self.state.fieldColors);
         self.props.onAlert(`${(
           winner == PLAYER.HUMAN ? 'You WIN!' :
@@ -228,7 +225,6 @@ class GameField extends React.Component {
     });
   }
   pass() {
-    console.log('pass');
     this.props.onAlert('PASS!', this.state.turn);
     let self = this;
     // ( BAD PART
@@ -270,7 +266,6 @@ class GameField extends React.Component {
         prev + current
       )
     );
-    console.log(numbersOfBW);
     if(numbersOfBW[0] == numbersOfBW[1]) {
       return null;
     } else {
@@ -285,7 +280,6 @@ class GameField extends React.Component {
   }
   handleturnChangeToHuman() {
     this.computerChoicedAzureMLTypeFieldColors.push(this.getAzureMLTypeFieldColors(this.state.fieldColors));
-    console.log(this.getPlaceablePositions(this.state.fieldColors, this.getPlacedColor(PLAYER.HUMAN)));
     if(this.getPlaceablePositions(this.state.fieldColors, this.getPlacedColor(PLAYER.HUMAN)).length == 0) this.pass();
   }
   getConfidenceLevel(computerWinProbability) {
@@ -301,7 +295,6 @@ class GameField extends React.Component {
     );
   }
   handleturnChangeToComputer() {
-    console.log('handleturnChangeToComputer');
     this.props.onUpdateMLConfidenceLevel(0);
     this.humanChoicedAzureMLTypeFieldColors.push(this.getAzureMLTypeFieldColors(this.state.fieldColors));
     let placedColor = this.getPlacedColor(PLAYER.COMPUTER);
@@ -316,7 +309,6 @@ class GameField extends React.Component {
         self.getChangedFieldColors(self.state.fieldColors, position.y, position.x, placedColor)
       )
     ).then(results => {
-      console.log(results);
       let computerWinProbabilities = results.map(value =>
         Number(value.scoredProbability) * (value.scoredLabel == '1' ? 1 : -1)
       );
@@ -327,11 +319,9 @@ class GameField extends React.Component {
       self.props.onUpdateMLConfidenceLevel(self.getConfidenceLevel(maxComputerWinProbability));
       self.place(computerPlacePosition.y, computerPlacePosition.x);
       // regist changes
-      console.log(self.computerChoicedAzureMLTypeFieldColors, self.humanChoicedAzureMLTypeFieldColors);
     });
   }
   sendTrainData(winner) {
-    console.log('sendTrainData');
     const APIURL = 'https://a1x87i27wk.execute-api.us-west-2.amazonaws.com/bridgeForAzureMLStage/train-data';
     let postBody = this.computerChoicedAzureMLTypeFieldColors.map(value =>
       value.concat([(winner == PLAYER.COMPUTER ? '1' : '0')])
@@ -342,7 +332,6 @@ class GameField extends React.Component {
         ).concat([(winner == PLAYER.HUMAN ? '1' : '0')])
       )
     );
-    console.log('traindata:', postBody);
     fetch(APIURL, {
       method: 'post',
       headers: {
