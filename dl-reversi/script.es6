@@ -1,8 +1,4 @@
-'use strict';
-
-if(window.navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
-  document.querySelector('.msg').textContent = '申し訳ありません。GoogleChromeでご覧ください';
-}
+use strict';
 
 (function() {
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -12,10 +8,6 @@ if(window.navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
   ga('create', 'UA-42893688-6', 'auto');
   ga('send', 'pageview');
 })();
-
-window.onerror = function(message, file, line, col, error) {
-  alert(arguments.join(','));
-};
 
 jQuery.noConflict();
 
