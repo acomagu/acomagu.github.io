@@ -8,10 +8,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-if (window.navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
-  document.querySelector('.msg').textContent = '申し訳ありません。GoogleChromeでご覧ください';
-}
-
 (function () {
   (function (i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {
@@ -21,10 +17,6 @@ if (window.navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
   ga('create', 'UA-42893688-6', 'auto');
   ga('send', 'pageview');
 })();
-
-window.onerror = function (message, file, line, col, error) {
-  alert(arguments.join(','));
-};
 
 jQuery.noConflict();
 
@@ -214,7 +206,6 @@ var GameField = (function (_React$Component2) {
       var postBody = JSON.stringify({
         data: postData
       });
-      console.log(postData);
       return fetch(APIURL, {
         method: 'post',
         headers: {
@@ -249,7 +240,6 @@ var GameField = (function (_React$Component2) {
       for (var y = 0; y < 8; ++y) {
         for (var x = 0; x < 8; ++x) {
           if (this.isPlaceable(fieldColors, y, x, placedColor)) {
-            console.log('placeable: ' + y + ', ' + x);
             ans.push(this.getPosition(y, x));
           }
         }
@@ -271,7 +261,6 @@ var GameField = (function (_React$Component2) {
         if (gameState == GAMESTATE.PROGRESS) {
           self.changeTurnTo(player == PLAYER.COMPUTER ? PLAYER.HUMAN : PLAYER.COMPUTER);
         } else {
-          console.log('gameset', self.getWinner(self.state.fieldColors));
           var winner = self.getWinner(self.state.fieldColors);
           self.props.onAlert('' + (winner == PLAYER.HUMAN ? 'You WIN!' : winner == PLAYER.COMPUTER ? 'I WIN!' : 'DROW...'), winner != null ? winner : PLAYER.COMPUTER);
           self.sendTrainData(winner);
@@ -286,7 +275,6 @@ var GameField = (function (_React$Component2) {
     value: function pass() {
       var _this = this;
 
-      console.log('pass');
       this.props.onAlert('PASS!', this.state.turn);
       var self = this;
       // ( BAD PART
@@ -336,7 +324,6 @@ var GameField = (function (_React$Component2) {
           return prev + current;
         });
       });
-      console.log(numbersOfBW);
       if (numbersOfBW[0] == numbersOfBW[1]) {
         return null;
       } else {
@@ -357,7 +344,6 @@ var GameField = (function (_React$Component2) {
     key: 'handleturnChangeToHuman',
     value: function handleturnChangeToHuman() {
       this.computerChoicedAzureMLTypeFieldColors.push(this.getAzureMLTypeFieldColors(this.state.fieldColors));
-      console.log(this.getPlaceablePositions(this.state.fieldColors, this.getPlacedColor(PLAYER.HUMAN)));
       if (this.getPlaceablePositions(this.state.fieldColors, this.getPlacedColor(PLAYER.HUMAN)).length == 0) this.pass();
     }
   }, {
@@ -368,7 +354,6 @@ var GameField = (function (_React$Component2) {
   }, {
     key: 'handleturnChangeToComputer',
     value: function handleturnChangeToComputer() {
-      console.log('handleturnChangeToComputer');
       this.props.onUpdateMLConfidenceLevel(0);
       this.humanChoicedAzureMLTypeFieldColors.push(this.getAzureMLTypeFieldColors(this.state.fieldColors));
       var placedColor = this.getPlacedColor(PLAYER.COMPUTER);
@@ -381,7 +366,6 @@ var GameField = (function (_React$Component2) {
       this.fetchMLResults(placeablePositions.map(function (position) {
         return self.getChangedFieldColors(self.state.fieldColors, position.y, position.x, placedColor);
       })).then(function (results) {
-        console.log(results);
         var computerWinProbabilities = results.map(function (value) {
           return Number(value.scoredProbability) * (value.scoredLabel == '1' ? 1 : -1);
         });
@@ -392,13 +376,11 @@ var GameField = (function (_React$Component2) {
         self.props.onUpdateMLConfidenceLevel(self.getConfidenceLevel(maxComputerWinProbability));
         self.place(computerPlacePosition.y, computerPlacePosition.x);
         // regist changes
-        console.log(self.computerChoicedAzureMLTypeFieldColors, self.humanChoicedAzureMLTypeFieldColors);
       });
     }
   }, {
     key: 'sendTrainData',
     value: function sendTrainData(winner) {
-      console.log('sendTrainData');
       var APIURL = 'https://a1x87i27wk.execute-api.us-west-2.amazonaws.com/bridgeForAzureMLStage/train-data';
       var postBody = this.computerChoicedAzureMLTypeFieldColors.map(function (value) {
         return value.concat([winner == PLAYER.COMPUTER ? '1' : '0']);
@@ -407,7 +389,6 @@ var GameField = (function (_React$Component2) {
           return n == '1' ? '2' : n == '2' ? '1' : '0';
         }).concat([winner == PLAYER.HUMAN ? '1' : '0']);
       }));
-      console.log('traindata:', postBody);
       fetch(APIURL, {
         method: 'post',
         headers: {
